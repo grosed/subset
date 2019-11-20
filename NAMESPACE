@@ -1,0 +1,6 @@
+useDynLib(subset)
+importFrom(Rcpp, evalCpp)
+exportMethods(summary,cpt.locations)
+export(wbs.subset)
+export(simulate.mvdata)
+export(robustscale)
