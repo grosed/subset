@@ -37,7 +37,7 @@ wbs.subset.class<-function(data,betas,alphas,zeta,M,seed,cpts,affected,...)
 #' x1<-c(rnorm(200,0,1),rnorm(100,10,1))
 #' x2<-c(rnorm(200,0,1),rnorm(100,10,1))
 #' X<-matrix(c(x0,x1,x2),300,3)
-#' X<-robustscale(Y)
+#' X<-robustscale(X)
 #' res<-wbs.subset(X,1000,5)
 #' cpt.locations(res)
 #'
