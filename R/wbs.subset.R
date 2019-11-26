@@ -1,10 +1,10 @@
 
-.wbs.subset.class<-setClass("wbs.subset.class",representation(data="array",betas="vector",alphas="vector",zeta="numeric",M="integer",seed="integer",
+.wbs.subset.class<-setClass("wbs.subset.class",representation(data="array",betas="vector",alphas="vector",thresholds="numeric",zeta="numeric",M="integer",seed="integer",
                                                   cpts="numeric",affected="list"))
 
-wbs.subset.class<-function(data,betas,alphas,zeta,M,seed,cpts,affected,...)
+wbs.subset.class<-function(data,betas,alphas,thresholds,zeta,M,seed,cpts,affected,...)
 {
-    .wbs.subset.class(data=data,betas=betas,alphas=alphas,zeta=zeta,M=M,seed=seed,cpts=cpts,affected=affected,...)
+    .wbs.subset.class(data=data,betas=betas,alphas=alphas,thresholds=thresholds,zeta=zeta,M=M,seed=seed,cpts=cpts,affected=affected,...)
 }
 
 
@@ -17,11 +17,14 @@ wbs.subset.class<-function(data,betas,alphas,zeta,M,seed,cpts,affected,...)
 #' 
 #' @param data An n by m matrix, array or data.frame containg n observations of m variates
 #' @param M An integer > 0 indicating the number of random intervals of [0,n] to generate for use with SUBSET
-#' @param zeta The threshold value.
-#' @param alphas The value of alphas used in SUBET. If not specified alphas is set to \code{rep(2*log(m),m)}. When specified, \code{alphas} should be a vector
-#' with length equal to the number of variates.
-#' @param betas The value of betas used in SUBET. If not specified betas is set to \code{4*log(1:n)}. When specified, \code{betas} should be a vector of length
-#' equal to the number observations or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
+#' @param alphas The values of alphas used in SUBET. If not specified alphas is set to \code{rep(2*log(m),m)}. When specified, \code{alphas} should be a vector
+#' with length equal to the number of variates, or a function. If \code{alphas} is a function it should take a single argument (the length of the subinterval) and return a
+#' numeric value.
+#' @param betas The values of betas used in SUBET. If not specified betas is set to \code{4*log(1:n)}. When specified, \code{betas} should be a vector of length
+#' equal to the number observations, or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
+#' numeric value.
+#' @param thresholds The values of the thresholds used in SUBET. If not specified threshold is set to \code{m + sqrt(2.0*m*betas)}. When specified, \code{thresholds} should be a vector of length
+#' equal to the number observations, or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
 #' numeric value.
 #' 
 #' @return An S4 class of type wbs.subset.class
@@ -38,11 +41,12 @@ wbs.subset.class<-function(data,betas,alphas,zeta,M,seed,cpts,affected,...)
 #' x2<-c(rnorm(200,0,1),rnorm(100,10,1))
 #' X<-matrix(c(x0,x1,x2),300,3)
 #' X<-robustscale(X)
-#' res<-wbs.subset(X,1000,5)
+#' res<-wbs.subset(X,1000)
 #' cpt.locations(res)
 #'
-wbs.subset<-function(data,M,zeta,alphas=NULL,betas=NULL)
+wbs.subset<-function(data,M,alphas=NULL,betas=NULL,thresholds=NULL)
 {
+    zeta<-0.0
     # check data
     if(is.data.frame(data))
     {
@@ -97,9 +101,26 @@ wbs.subset<-function(data,M,zeta,alphas=NULL,betas=NULL)
     {
         stop("the length of alphas should equal the number of variates")
     }
+
+
+    # check thresholds
+    if(is.null(thresholds))
+    {
+        thresholds<-dim(data)[2] + sqrt(2.0*dim(data)[2]*betas)
+    }
+    if(!is.numeric(thresholds))
+    {
+        stop("thresholds must be a numeric vector or a function")
+    }
+    if(length(thresholds) != dim(data)[1])
+    {
+        stop("the length of thresholds should equal the number of variates")
+    }
+
+    
     list.data<-Map(function(i) data[,i],1:ncol(data))
-    result<-marshall_wbs_subset(list.data,M,zeta,betas,alphas,seed)
-    return(wbs.subset.class(data,betas,alphas,zeta,as.integer(M),as.integer(seed),sort(result$breakpoints),result$affected))
+    result<-marshall_wbs_subset(list.data,M,zeta,betas,alphas,thresholds,seed)
+    return(wbs.subset.class(data,betas,alphas,thresholds,zeta,as.integer(M),as.integer(seed),sort(result$breakpoints),result$affected))
 }
 
 

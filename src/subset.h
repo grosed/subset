@@ -14,6 +14,7 @@ namespace subset
 										      const unsigned int&,
 										      const unsigned int&,
 										      const std::vector<double>&,
+										      const std::vector<double>&,
 										      const std::vector<double>&);
   
 

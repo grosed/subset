@@ -14,10 +14,11 @@ Rcpp::List marshall_subset(const std::vector<std::vector<double> >& Y,
 			   const unsigned int& s,
 			   const unsigned int& e,
 			   const std::vector<double>& betas,
-			   const std::vector<double>& alphas)
+			   const std::vector<double>& alphas,
+			   const std::vector<double>& thresholds)
 { 
 
-  auto result = subset::subset(Y,s,e,betas,alphas);
+  auto result = subset::subset(Y,s,e,betas,alphas,thresholds);
   return Rcpp::List::create(Rcpp::Named("savings") = std::get<0>(result),
 			    Rcpp::Named("cpt") = std::get<1>(result),
 			    Rcpp::Named("cost") = std::get<2>(result),
@@ -33,16 +34,16 @@ Rcpp::List marshall_wbs_subset(const std::vector<std::vector<double> >& data,
 			       const double& zeta,
 			       const std::vector<double>& betas,
 			       const std::vector<double>& alphas,
+			       const std::vector<double>& thresholds,
 			       const unsigned int& seed)
-{ 
-
+{   
   using namespace subset;
   using namespace std::placeholders;
   wbs_subset_state S;
   S.M = M;
   S.T = data[0].size();
   S.seed = seed;
-  S.X_tilde = std::bind(subset::subset,data,_1,_2,betas,alphas);
+  S.X_tilde = std::bind(subset::subset,data,_1,_2,betas,alphas,thresholds);
   S.zeta = zeta;
   S = create_wbs_subset_intervals(std::move(S));
   S = wbs(std::move(S));

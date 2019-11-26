@@ -6,8 +6,8 @@
 using namespace Rcpp;
 
 // marshall_subset
-Rcpp::List marshall_subset(const std::vector<std::vector<double> >& Y, const unsigned int& s, const unsigned int& e, const std::vector<double>& betas, const std::vector<double>& alphas);
-RcppExport SEXP _subset_marshall_subset(SEXP YSEXP, SEXP sSEXP, SEXP eSEXP, SEXP betasSEXP, SEXP alphasSEXP) {
+Rcpp::List marshall_subset(const std::vector<std::vector<double> >& Y, const unsigned int& s, const unsigned int& e, const std::vector<double>& betas, const std::vector<double>& alphas, const std::vector<double>& thresholds);
+RcppExport SEXP _subset_marshall_subset(SEXP YSEXP, SEXP sSEXP, SEXP eSEXP, SEXP betasSEXP, SEXP alphasSEXP, SEXP thresholdsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -16,13 +16,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const unsigned int& >::type e(eSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type betas(betasSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type alphas(alphasSEXP);
-    rcpp_result_gen = Rcpp::wrap(marshall_subset(Y, s, e, betas, alphas));
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type thresholds(thresholdsSEXP);
+    rcpp_result_gen = Rcpp::wrap(marshall_subset(Y, s, e, betas, alphas, thresholds));
     return rcpp_result_gen;
 END_RCPP
 }
 // marshall_wbs_subset
-Rcpp::List marshall_wbs_subset(const std::vector<std::vector<double> >& data, const unsigned int& M, const double& zeta, const std::vector<double>& betas, const std::vector<double>& alphas, const unsigned int& seed);
-RcppExport SEXP _subset_marshall_wbs_subset(SEXP dataSEXP, SEXP MSEXP, SEXP zetaSEXP, SEXP betasSEXP, SEXP alphasSEXP, SEXP seedSEXP) {
+Rcpp::List marshall_wbs_subset(const std::vector<std::vector<double> >& data, const unsigned int& M, const double& zeta, const std::vector<double>& betas, const std::vector<double>& alphas, const std::vector<double>& thresholds, const unsigned int& seed);
+RcppExport SEXP _subset_marshall_wbs_subset(SEXP dataSEXP, SEXP MSEXP, SEXP zetaSEXP, SEXP betasSEXP, SEXP alphasSEXP, SEXP thresholdsSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -31,8 +32,9 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const double& >::type zeta(zetaSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type betas(betasSEXP);
     Rcpp::traits::input_parameter< const std::vector<double>& >::type alphas(alphasSEXP);
+    Rcpp::traits::input_parameter< const std::vector<double>& >::type thresholds(thresholdsSEXP);
     Rcpp::traits::input_parameter< const unsigned int& >::type seed(seedSEXP);
-    rcpp_result_gen = Rcpp::wrap(marshall_wbs_subset(data, M, zeta, betas, alphas, seed));
+    rcpp_result_gen = Rcpp::wrap(marshall_wbs_subset(data, M, zeta, betas, alphas, thresholds, seed));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -52,8 +54,8 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_subset_marshall_subset", (DL_FUNC) &_subset_marshall_subset, 5},
-    {"_subset_marshall_wbs_subset", (DL_FUNC) &_subset_marshall_wbs_subset, 6},
+    {"_subset_marshall_subset", (DL_FUNC) &_subset_marshall_subset, 6},
+    {"_subset_marshall_wbs_subset", (DL_FUNC) &_subset_marshall_wbs_subset, 7},
     {"_subset_marshall_wbs", (DL_FUNC) &_subset_marshall_wbs, 4},
     {NULL, NULL, 0}
 };

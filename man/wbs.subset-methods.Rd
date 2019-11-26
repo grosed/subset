@@ -5,20 +5,23 @@
 \alias{wbs.subset}
 \title{Wild Binary Segmentation using SUBSET.}
 \usage{
-wbs.subset(data, M, zeta, alphas = NULL, betas = NULL)
+wbs.subset(data, M, alphas = NULL, betas = NULL, thresholds = NULL)
 }
 \arguments{
 \item{data}{An n by m matrix, array or data.frame containg n observations of m variates}
 
 \item{M}{An integer > 0 indicating the number of random intervals of [0,n] to generate for use with SUBSET}
 
-\item{zeta}{The threshold value.}
+\item{alphas}{The values of alphas used in SUBET. If not specified alphas is set to \code{rep(2*log(m),m)}. When specified, \code{alphas} should be a vector
+with length equal to the number of variates, or a function. If \code{alphas} is a function it should take a single argument (the length of the subinterval) and return a
+numeric value.}
 
-\item{alphas}{The value of alphas used in SUBET. If not specified alphas is set to \code{rep(2*log(m),m)}. When specified, \code{alphas} should be a vector
-with length equal to the number of variates.}
+\item{betas}{The values of betas used in SUBET. If not specified betas is set to \code{4*log(1:n)}. When specified, \code{betas} should be a vector of length
+equal to the number observations, or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
+numeric value.}
 
-\item{betas}{The value of betas used in SUBET. If not specified betas is set to \code{4*log(1:n)}. When specified, \code{betas} should be a vector of length
-equal to the number observations or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
+\item{thresholds}{The values of the thresholds used in SUBET. If not specified threshold is set to \code{m + sqrt(2.0*m*betas)}. When specified, \code{thresholds} should be a vector of length
+equal to the number observations, or a function. If \code{betas} is a function it should take a single argument (the length of the subinterval) and return a
 numeric value.}
 }
 \value{
@@ -34,7 +37,7 @@ x1<-c(rnorm(200,0,1),rnorm(100,10,1))
 x2<-c(rnorm(200,0,1),rnorm(100,10,1))
 X<-matrix(c(x0,x1,x2),300,3)
 X<-robustscale(X)
-res<-wbs.subset(X,1000,5)
+res<-wbs.subset(X,1000)
 cpt.locations(res)
 
 }

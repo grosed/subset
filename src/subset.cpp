@@ -15,7 +15,8 @@ namespace subset
 										      const unsigned int& s,
 										      const unsigned int& e,
 										      const std::vector<double>& betas,
-										      const std::vector<double>& alphas)
+										      const std::vector<double>& alphas,
+										      const std::vector<double>& thresholds)
   {
     // assumes error checking done by calling environment
     auto p = Y.size();
@@ -60,7 +61,8 @@ namespace subset
 		   });
     
     
-    auto thresh = (double)(p) + std::sqrt(2.0*(double)(p)*beta);
+    // auto thresh = (double)(p) + std::sqrt(2.0*(double)(p)*beta);
+    auto thresh = thresholds[e-s];
     std::vector<double> Ctot(n-1,0.0);
     for(auto& c : C)
       {
